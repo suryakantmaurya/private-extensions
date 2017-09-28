@@ -1,0 +1,7 @@
+.custom-options  .option-box {border:1px solid #cddddd; padding:1em;  background:#e7efef; margin:1.5em 0; overflow:auto;}
+.custom-options  .type-id  {width:20px; }
+.custom-options  .type-children  {width:155px; }
+.custom-options .option-box .border  td.od-children { width:170px !important; padding:0;}
+.custom-options .option-box .border  input.select-type-children { width:136px !important; margin:2px 0 2px 4px;}
+.custom-options .option-box .border  select.select-type-children { width:142px !important; margin:2px 0 2px 4px;}
+.custom-options .option-box .border  span.link-type-children {display:inline-block; width:20px; height:22px; margin-top:2px; vertical-align: top; text-align:center; color: red; cursor: pointer;}

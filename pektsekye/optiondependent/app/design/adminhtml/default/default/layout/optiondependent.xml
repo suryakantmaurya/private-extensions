@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+	<adminhtml_catalog_product_new>
+		<reference name="head">
+				<action method="addCss"><name>optiondependent.css</name></action>			
+		</reference>	
+		<reference name="js">
+			<block type="optiondependent/adminhtml_catalog_product_edit_js" name="optiondependent" template="optiondependent/catalog/product/edit/js.phtml" />
+		</reference>		
+	</adminhtml_catalog_product_new>
+	
+	<adminhtml_catalog_product_edit>
+		<reference name="head">
+				<action method="addCss"><name>optiondependent.css</name></action>					
+		</reference>		
+		<reference name="js">
+			<block type="optiondependent/adminhtml_catalog_product_edit_js" name="optiondependent" template="optiondependent/catalog/product/edit/js.phtml" />
+		</reference>		
+	</adminhtml_catalog_product_edit>
+
+  <adminhtml_sales_order_create_index>
+    <reference name="head">
+      <action method="addJs"><script>pektsekye/order_create/option_dependent.js</script></action>      	
+    </reference>
+  </adminhtml_sales_order_create_index>
+
+  <ADMINHTML_CATALOG_PRODUCT_COMPOSITE_CONFIGURE>    
+    <reference name="product.composite.fieldset">    
+      <block type="optiondependent/product_view_js" name="optiondependent" template="optiondependent/catalog/product/composite/configure/js.phtml" />                
+    </reference>	        
+  </ADMINHTML_CATALOG_PRODUCT_COMPOSITE_CONFIGURE>	
+	
+</layout>

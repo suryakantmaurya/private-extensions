@@ -1,0 +1,12 @@
+{
+    "name": "pektsekye/optiondependent",
+    "description": "Pektsekye OptionDependent",
+    "homepage": "https://www.theretrofitsource.com/",
+    "type": "magento-module",
+    "authors": [
+        {
+            "name": "Pektsekye",
+            "homepage": "https://www.theretrofitsource.com/"
+        }
+    ]
+}

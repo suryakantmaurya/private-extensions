@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<package>
+    <name>pektsekye+Dependent_Custom_Options</name>
+    <version>1.8.0</version>
+    <stability>stable</stability>
+    <license uri="http://hottons.com/LICENSE_EULA.txt">commercial</license>
+    <channel>030a03f25d70f652aecff98f46895a1a</channel>
+    <extends/>
+    <summary>It makes custom options dependent</summary>
+    <description>This addition makes product custom options dependent. So you can set different size for different gender. 
+Or display a file upload field if a customer wants to upload a sample. 
+This extension has "Import options from other product" and dataflow .csv Import / Export features. 
+So you can copy options from one product to another.</description>
+    <notes>The latest version.</notes>
+    <authors>
+        <author>
+            <name>Pektsekye</name>
+            <user>Pektsekye</user>
+            <email>pektsekye@gmail.com</email>
+        </author>
+    </authors>
+    <date>2013-06-01</date>
+    <time>18:44:15</time>
+    <contents>
+        <target name="magelocal">
+            <dir name="Pektsekye">
+                <dir name="OptionDependent">
+                    <dir name="Block">
+                        <dir name="Adminhtml">
+                            <dir name="Catalog">
+                                <dir name="Product">
+                                    <dir name="Edit">
+                                        <file name="Js.php" hash="df0d4d1cd10546acaba0ee9d6cf68476"/>
+                                    </dir>
+                                </dir>
+                            </dir>
+                        </dir>
+                        <dir name="Product">
+                            <dir name="View">
+                                <file name="Js.php" hash="0a5c9610ea242bd99f27c7daf7b91a9c"/>
+                            </dir>
+                        </dir>
+                    </dir>
+                    <dir name="Helper">
+                        <file name="Data.php" hash="a90de2e5121af4ac3c8013de90038562"/>
+                    </dir>
+                    <dir name="Model">
+                        <dir name="Convert">
+                            <dir name="Adapter">
+                                <file name="Options.php" hash="ee05ae0c95db10e609e134cf153032b0"/>
+                            </dir>
+                            <dir name="Parser">
+                                <file name="Options.php" hash="ef5fc62f74674936abbb15c05ecde5e2"/>
+                            </dir>
+                        </dir>
+                        <file name="Import.php" hash="0887a62a787ebacb34df3ce3a2442db6"/>
+                        <dir name="Mysql4">
+                            <dir name="Import">
+                                <file name="Collection.php" hash="e25888ca7d1eed299b80abc47f101f67"/>
+                            </dir>
+                            <file name="Import.php" hash="e1fa49b87b46ca05fe479ce727102080"/>
+                            <dir name="Option">
+                                <file name="Collection.php" hash="a3708cef49ca1e526d17355e0219fe44"/>
+                            </dir>
+                            <file name="Option.php" hash="b878c718c676b372224bcd426c8daf78"/>
+                            <dir name="Value">
+                                <file name="Collection.php" hash="19ee4f2df631f623117e1e721cb02002"/>
+                            </dir>
+                            <file name="Value.php" hash="ba0b6a68a502c23f01550e422d082c35"/>
+                        </dir>
+                        <file name="Observer.php" hash="85ffa8b6e1c0a5864a5803502e242d78"/>
+                        <file name="Option.php" hash="b02c68492a7728d7128bc3a6288e1404"/>
+                        <file name="Quote.php" hash="8bf4c8a70030e9df64688d55a49bef3e"/>
+                        <dir name="Resource">
+                            <dir name="Eav">
+                                <dir name="Mysql4">
+                                    <dir name="Product">
+                                        <file name="Option.php" hash="16a5e418038206c739d26237a39a181d"/>
+                                    </dir>
+                                </dir>
+                            </dir>
+                        </dir>
+                        <file name="Value.php" hash="a7bf52b3cc6d3f38e4bafe265ba88624"/>
+                    </dir>
+                    <dir name="etc">
+                        <file name="config.xml" hash="dcf883ba216419dd71dd2edeffab1bce"/>
+                    </dir>
+                    <dir name="sql">
+                        <dir name="optiondependent_setup">
+                            <file name="mysql4-install-0.1.0.php" hash="bac74b4f6ae655b1ac1f85e641dd313e"/>
+                            <file name="mysql4-upgrade-0.1.0-0.2.0.php" hash="74e2d265973405c294d15684bfd6d9be"/>
+                        </dir>
+                    </dir>
+                </dir>
+            </dir>
+        </target>
+        <target name="magedesign">
+            <dir name="adminhtml">
+                <dir name="default">
+                    <dir name="default">
+                        <dir name="layout">
+                            <file name="optiondependent.xml" hash="77ff13194e834d7d0c63cf3dbfb97cc8"/>
+                        </dir>
+                        <dir name="template">
+                            <dir name="optiondependent">
+                                <dir name="catalog">
+                                    <dir name="product">
+                                        <dir name="composite">
+                                            <dir name="configure">
+                                                <file name="js.phtml" hash="883acf266af9e1915836d5783cf5dc53"/>
+                                            </dir>
+                                        </dir>
+                                        <dir name="edit">
+                                            <file name="js.phtml" hash="d9cde9c610bddba314ab6fd46fdf3cb6"/>
+                                        </dir>
+                                    </dir>
+                                </dir>
+                            </dir>
+                        </dir>
+                    </dir>
+                </dir>
+            </dir>
+            <dir name="frontend">
+                <dir name="base">
+                    <dir name="default">
+                        <dir name="layout">
+                            <file name="optiondependent.xml" hash="e00dc4a7e179ab3e69c7cb856ef58fa5"/>
+                        </dir>
+                        <dir name="template">
+                            <dir name="optiondependent">
+                                <dir name="product">
+                                    <dir name="view">
+                                        <file name="js.phtml" hash="b50e3e870fcea783b5a283d779d38e07"/>
+                                    </dir>
+                                </dir>
+                            </dir>
+                        </dir>
+                    </dir>
+                </dir>
+            </dir>
+        </target>
+        <target name="mageetc">
+            <dir name="modules">
+                <file name="Pektsekye_OptionDependent.xml" hash="9e518ef461865c1b04499517ed0931af"/>
+            </dir>
+        </target>
+        <target name="magelocale">
+            <dir name="en_US">
+                <file name="Pektsekye_OptionDependent.csv" hash="130bd1858308c99dcf7d3a9c1a0f1088"/>
+            </dir>
+        </target>
+        <target name="mageskin">
+            <dir name="adminhtml">
+                <dir name="default">
+                    <dir name="default">
+                        <file name="optiondependent.css" hash="b0533f0f324ccbf19c6a038e0928aab3"/>
+                    </dir>
+                </dir>
+            </dir>
+        </target>
+        <target name="mageweb">
+            <dir name="js">
+                <dir name="pektsekye">
+                    <file name="option_dependent.js" hash="26617f320f7335d420c90b388fbe78f3"/>
+                    <dir name="order_create">
+                        <file name="option_dependent.js" hash="7366f52199b30b0bfef0e57316f343d3"/>
+                    </dir>
+                </dir>
+            </dir>
+        </target>
+    </contents>
+    <compatible/>
+    <dependencies>
+        <required>
+            <php>
+                <min>5.1.0</min>
+                <max>6.0.0</max>
+            </php>
+        </required>
+    </dependencies>
+</package>

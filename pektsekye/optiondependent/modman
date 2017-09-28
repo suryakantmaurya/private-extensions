@@ -1,0 +1,9 @@
+app/code/local/Pektsekye/OptionDependent
+app/design/adminhtml/default/default/layout/optiondependent.xml
+app/design/adminhtml/default/default/template/optiondependent
+app/design/frontend/base/default/layout/optiondependent.xml
+app/design/frontend/base/default/template/optiondependent
+app/etc/modules/Pektsekye_OptionDependent.xml
+app/locale/en_US/Pektsekye_OptionDependent.csv
+js/pektsekye
+skin/adminhtml/default/default/optiondependent.css

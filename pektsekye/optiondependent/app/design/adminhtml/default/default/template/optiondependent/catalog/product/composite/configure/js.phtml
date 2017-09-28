@@ -1,0 +1,20 @@
+<input type="hidden" id="optiondependent_instance_id" value="">
+<script type="text/javascript"> 
+//<![CDATA[
+
+    OptionDependent.Config = {  
+      inPreconfigured   : <?php echo $this->getInPreconfigured() ?>,
+      config            : <?php echo $this->getConfig() ?>  
+    };
+
+		var instanceId = $('optiondependent_instance_id').value;
+    if (instanceId != ''){
+      optionDependentInstanceId = parseInt(instanceId);
+      optionDependentInstances[optionDependentInstanceId].reloadElements();
+    } else {
+      optionDependentInstanceId = optionDependentInstances.length;
+      optionDependentInstances[optionDependentInstanceId] = new OptionDependent.Main();	
+      $('optiondependent_instance_id').value = optionDependentInstanceId;
+    }
+//]]>
+</script>

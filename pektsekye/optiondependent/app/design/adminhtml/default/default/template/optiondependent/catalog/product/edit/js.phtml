@@ -1,0 +1,284 @@
+<script type="text/javascript">
+//<![CDATA[
+	var odImportContainer =     '<div id="od_import_container"><?php echo Mage::helper('optiondependent')->__('Import Options from Product (SKU):') ?> <input class="input-text" type="text" name="product[od_import_sku]" value=""></div>';
+	var odIdColumn =    '<th class="type-id"><?php echo Mage::helper('optiondependent')->__('Id') ?></th>';
+	var odChildrenColumn =    '<th class="type-children"><?php echo Mage::helper('optiondependent')->__('Children') ?></th>';
+	var odIdField    =     '<td>{{row_id}}<input type="hidden" name="product[options][{{id}}][row_id]" value="{{row_id}}"></td>';
+	var odIdFieldTypeSelect    =     '<td>{{row_id}}<input type="hidden" name="product[options][{{id}}][values][{{select_id}}][row_id]" value="{{row_id}}"></td>';	
+	var odChildrenField    =  '<td class="od-children">'+
+														'<input class="input-text select-type-children" type="text" name="product[options][{{id}}][values][{{select_id}}][children]" id="option_{{id}}_{{select_id}}_children" value="{{children}}">'+ 
+														'<span onclick="instOptionDependent.showSelect({{id}},{{select_id}});" title="<?php echo Mage::helper('catalog')->__('Click to select') ?>" id="option_{{id}}_{{select_id}}_show_link" class="link-type-children">s</span>'+  
+														'<span onclick="instOptionDependent.showInput({{id}},{{select_id}});" title="<?php echo Mage::helper('catalog')->__('Click to hide') ?>" id="option_{{id}}_{{select_id}}_hide_link" class="link-type-children" style="display:none;">h</span>'+
+														'<div id="option_{{id}}_{{select_id}}_children_advice"></div>'+
+												'</td>';
+								
+OptionDependent = Class.create();
+OptionDependent.prototype = {
+	optionIds : [],	
+	rowIds : [],
+	lastRowId : 0,	
+	rowIdByOption : [],	
+	rowIdsByOption : [],
+	selectIdByRowId : [],	
+	idColumn : odIdColumn,
+	childrenColumn : odChildrenColumn,	
+	importContainer : odImportContainer,	
+	idField : odIdField,
+	idFieldTypeSelect : odIdFieldTypeSelect,	
+	childrenField : odChildrenField,	
+	templatePattern : /(^|.|\r|\n)({{(\w+)}})/,	
+	config : [],
+	initialize : function(config){
+		this.config = config;		
+		this.idFieldTemplate = new Template(this.idField, this.templatePattern);
+		this.idFieldTypeSelectTemplate = new Template(this.idFieldTypeSelect, this.templatePattern);			
+		this.childrenFieldTemplate = new Template(this.childrenField, this.templatePattern);		
+		varienGlobalEvents.attachEventHandler('showTab', this.addImport.bind(this));
+	},
+	addImport : function(event){
+	  if (event.tab && event.tab.name && event.tab.name == 'customer_options' && (!$('price_type') || $('price_type').value != '0') && !$('od_import_container') && this.optionIds.length == 0 && $('product_options_container')){
+		Element.insert($('product_options_container'), {'top' : this.importContainer});
+		}
+	},	
+	reloadSelect : function(optionId, select_id, children){
+		var i = 1;
+		var select = '';
+		var l = this.optionIds.length;	
+		while (l--){
+			if (this.optionIds[l] != optionId){
+				var option = $('product_option_'+this.optionIds[l]+'_title');
+				if (!Validation.validate(option)){
+					option.focus(); 
+					return false;
+				}
+				var extracheck = true;
+				if (this.rowIdByOption[this.optionIds[l]] && this.rowIdsByOption[this.optionIds[l]]){
+					var type = $('product_option_'+this.optionIds[l]+'_type').value; 
+					extracheck = type != 'drop_down' && type != 'radio' && type != 'checkbox' && type  != 'multiple';
+				}
+				
+				if (this.rowIdByOption[this.optionIds[l]] && extracheck){
+					select +=	'<option '+(children.indexOf(this.rowIdByOption[this.optionIds[l]]) != -1 ? 'selected' : '')+' value="'+this.rowIdByOption[this.optionIds[l]]+'">'+option.value+' '+this.rowIdByOption[this.optionIds[l]]+'</option>';	
+					i++;
+				} else {	
+					select +=	'<optgroup label="'+option.value+'">';	
+					var ll = this.rowIdsByOption[this.optionIds[l]].length;	
+					for (var ii=0;ii<ll;ii++){
+						var elm = $('product_option_'+this.optionIds[l]+'_select_'+this.selectIdByRowId[this.rowIdsByOption[this.optionIds[l]][ii]]+'_title');				
+						if (!Validation.validate(elm)){
+							elm.focus();
+							return false;
+						}
+						select +=	'<option '+(children.indexOf(this.rowIdsByOption[this.optionIds[l]][ii]) != -1 ? 'selected' : '')+' value="'+this.rowIdsByOption[this.optionIds[l]][ii]+'">'+elm.value+' '+this.rowIdsByOption[this.optionIds[l]][ii]+'</option>';
+						i++;
+					}
+					select +=	'</optgroup>';
+					i++;
+				}
+			}
+		}	
+		if (i > 20)
+			i = 20;
+		return '<select onblur="instOptionDependent.showInput('+optionId+','+select_id+');" class="select select-type-children" name="select_children" id="option_'+optionId+'_'+select_id+'_children" multiple size="' + i + '"><option value=""></option>' + select + '</select>';			
+	},	
+	showSelect : function(id, select_id){
+		if (this.optionIds.length > 1){
+			var input = $('option_'+id+'_'+select_id+'_children');
+			if (input.value != ''){
+				var s = '['+input.value+']';			
+				try {
+					var children = s.evalJSON();
+					var select = this.reloadSelect(id, select_id, children);			
+				} catch(e) {
+					var select = this.reloadSelect(id, select_id, []);
+				}			
+			}	else {
+				var select = this.reloadSelect(id, select_id, []);
+			}	
+			if (select){
+				Element.replace(input, select);
+				$('option_'+id+'_'+select_id+'_children').focus();
+				$('option_'+id+'_'+select_id+'_show_link').hide();
+				$('option_'+id+'_'+select_id+'_hide_link').show();
+			}
+		}
+	},
+	showInput : function(id, select_id){
+		var select = $('option_'+id+'_'+select_id+'_children');
+		var value = $F(select).join(',');
+		var input = '<input class="input-text select-type-children" type="text" name="product[options]['+id+'][values]['+select_id+'][children]" id="option_'+id+'_'+select_id+'_children" value="'+value+'">';
+		Element.replace(select, input);
+		$('option_'+id+'_'+select_id+'_hide_link').hide();			
+		$('option_'+id+'_'+select_id+'_show_link').show();
+	},		
+    insertHeading : function(header, body, id, type){
+		var impContainer = $('od_import_container');
+		if (impContainer){
+			impContainer.down('input').value = '';
+			impContainer.hide();  
+		}
+		if (!Prototype.Browser.IE)
+			header.up('div.option-box').setStyle({maxHeight:'500px'});
+		var delButton = header.down('.delete-product-option');
+		Event.observe(delButton, 'click', this.deleteOption.bind(this,id));
+		var table = body.down('table.border');
+		var w = table.getStyle('width');
+		w.sub(/[0-9]+/, function(match){
+			  w = parseInt(match[0]);
+		 });
+		w += 180;
+		w += 'px';
+		table.setStyle({'width': w});
+		var tr = body.down('tr.headings');
+		Element.insert(tr, {'top' : this.idColumn});
+		if (type == 'select'){
+			Element.insert(tr.down('th.last'), {'before' : this.childrenColumn});
+			this.rowIdsByOption[id] = [];
+			if (!this.rowIdByOption[id])
+				this.optionIds.push(id);			
+		}	else {
+			if (this.config[0] && this.config[0][id]){
+				var row_id = parseInt(this.config[0][id]);
+				if (row_id > this.lastRowId)
+					this.lastRowId = row_id;			
+			} else {
+				if (!this.rowIdByOption[id]){
+					this.lastRowId++;
+					var row_id = this.lastRowId;
+				} else {
+					var row_id = this.rowIdByOption[id];
+				}	
+			}	
+			
+			Element.insert(tr.next(), {'top' : this.idFieldTemplate.evaluate({
+					'id' : id,
+					'row_id' : row_id						
+				})});
+			if (!this.rowIdByOption[id]){
+				if (!this.rowIdsByOption[id])
+					this.optionIds.push(id);
+				this.rowIdByOption[id] = row_id;
+				this.rowIds.push(row_id);				
+			}
+		}			
+    },
+	 insertRow : function(id, select_id){
+		var element = $('product_option_'+id+'_select_'+select_id);	
+		if (this.config[1] && this.config[1][select_id]){
+			var row_id = parseInt(this.config[1][select_id][0]);
+			if (row_id > this.lastRowId)
+				this.lastRowId = row_id;			
+		} else {
+			this.lastRowId++;
+			var row_id = this.lastRowId;
+		}	
+		
+		Element.insert(element.down('td'), {'before' : this.idFieldTypeSelectTemplate.evaluate({
+				'id' : id,
+				'select_id' : select_id,
+				'row_id' : row_id						
+			})});
+			
+		if (this.config[1] && this.config[1][select_id] && this.config[1][select_id][1]){
+			var children = this.config[1][select_id][1];					
+		} else {					
+			var children = '';	
+		}	
+		var last = element.down('td.last');
+		Element.insert(last, {'before' : this.childrenFieldTemplate.evaluate({
+				'id' : id,
+				'select_id' : select_id,
+				'children' : children						
+			})});		
+		Event.observe(last.down('.delete-select-row'), 'click', this.deleteRow.bind(this, id, row_id));
+		this.rowIds.push(row_id);
+		this.rowIdsByOption[id].push(row_id);
+		this.selectIdByRowId[row_id] = select_id;
+	},
+	deleteOption : function(id){
+		this.optionIds = this.optionIds.without(id);
+		if (this.rowIdByOption[id]){
+			this.rowIds = this.rowIds.without(this.rowIdByOption[id]);			
+			this.rowIdByOption[id] = null;	
+		} else if (this.rowIdsByOption[id]){
+			var l = this.rowIdsByOption[id].length;
+			while (l--)
+				this.rowIds = this.rowIds.without(this.rowIdsByOption[id][l]);
+			this.rowIdsByOption[id] = null;
+		}
+	},
+	deleteRow : function(id, rowId){
+		this.rowIds = this.rowIds.without(rowId);
+		this.rowIdsByOption[id] = this.rowIdsByOption[id].without(rowId);	
+	}		
+}
+
+
+var instOptionDependent = new OptionDependent(<?php echo $this->getOptionDependent(); ?>);
+
+Validation.add('select-type-children', '<?php echo Mage::helper('optiondependent')->__('Invalid row Ids') ?>', function(v, elm) {
+
+		var regex = /^option_(\d+)_(\d+)_children$/;
+		var f = elm.id.match(regex);
+		
+	if (elm.type == 'select-multiple'){
+		instOptionDependent.showInput(f[1], f[2]);
+		return true;		
+	}	
+	
+	if (v == '')
+		return true;	
+
+	elm.advaiceContainer = elm.id + '_advice';	
+	var s = '['+v+']';
+	try {
+		var ch = s.evalJSON();	
+	} catch(e) {
+		elm.focus();
+		return false;
+	}
+
+	var l = ch.length;
+	while (l--)
+		if (instOptionDependent.rowIds.indexOf(ch[l]) == -1 || instOptionDependent.rowIdsByOption[f[1]].indexOf(ch[l]) != -1){
+			elm.focus();
+			return false;
+		}
+		
+	return true;
+});
+
+Element._odInsert = Element.insert;
+Element.insert = function (element, insertions) {
+	this._odInsert(element, insertions);
+	var element = $(element);
+	if (element.id){
+		var optionRegex = /^product_option_\d+$/;
+		var optionRowRegex = /^select_option_type_row_\d+$/;		
+		if (element.id.match(optionRegex)){
+			var regex = /product_option_(\d+)_type_(text|file|select|date)/;
+			var ids = insertions.after.match(regex);
+			if (ids){					
+				if (!selectOptionType._add){
+					selectOptionType._add = selectOptionType.add;
+					selectOptionType.add = function (data) {
+						var previous = this.itemCount;
+						this._add(data);
+						if (this.itemCount <= previous)
+							this.itemCount = previous + 1;					
+					}
+				}
+				var body = $(ids[0]);
+				instOptionDependent.insertHeading(element, body, ids[1], ids[2]); 				
+			}
+		} else if(element.id.match(optionRowRegex)){
+			var regex = /product_option_(\d+)_select_(\d+)/;
+			var ids  = insertions.bottom.match(regex);	
+			if(ids)
+				instOptionDependent.insertRow(ids[1], ids[2]);
+		}	
+	}	
+ }
+
+//]]> 
+</script>

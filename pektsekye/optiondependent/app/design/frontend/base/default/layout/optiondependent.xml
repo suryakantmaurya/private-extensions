@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+	<catalog_product_view>
+		<reference name="head">
+			<action method="addJs"><script>pektsekye/option_dependent.js</script></action>
+		</reference>
+		<reference name="content">
+			<block type="optiondependent/product_view_js" name="optiondependent" after="product.info" template="optiondependent/product/view/js.phtml" />
+		</reference>
+	</catalog_product_view>
+</layout>
